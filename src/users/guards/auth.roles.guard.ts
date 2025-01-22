@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -20,38 +20,38 @@ export class AuthRolesGuard implements CanActivate {
     const roles: UserType[] = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]);
 
     if (!roles || roles.length === 0) {
-      return false;
+      throw new UnauthorizedException('No roles defined');
     }
 
     // Get request from client
     const req: Request = context.switchToHttp().getRequest();
     const [type, token] = req.headers.authorization?.split(' ') ?? [];
 
-    if (token && type === 'Bearer') {
-      try {
-        const payload: JwtPayloadType = await this.jwtService.verifyAsync(
-          token,
-          {
-            secret: this.configService.get<string>('JWT_SECRET'),
-          },
-        );
+    if (!token || type !== 'Bearer') {
+      throw new UnauthorizedException('No token provided');
+    }
 
-        const user = await this.userService.getCurrentUser(payload.id);
-        if (!user) {
-          return false;
-        }
+    try {
+      const payload: JwtPayloadType = await this.jwtService.verifyAsync(
+        token,
+        {
+          secret: this.configService.get<string>('JWT_SECRET'),
+        },
+      );
 
-        if (roles.includes(user.userType)) {
-          req['user'] = payload;
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error) {
-        return false;
+      const user = await this.userService.getCurrentUser(payload.id);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
       }
-    } else {
-      return false;
+
+      if (roles.includes(user.userType)) {
+        req['user'] = payload;
+        return true;
+      } else {
+        throw new UnauthorizedException('User does not have the required role');
+      }
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }
