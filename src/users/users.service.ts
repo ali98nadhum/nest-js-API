@@ -68,10 +68,17 @@ export class UserService {
   }
 
   
+  // Get user information (for him selef)
   public async getCurrentUser(id: number) {
     const user = await this.userRepository.findOne({where: {id}});
     if(!user) throw new NotFoundException("User not found");
     return user;
+  }
+
+
+  // Get all users
+  public getAll(){
+    return this.userRepository.find();
   }
 
 
