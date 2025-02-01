@@ -6,35 +6,31 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {CURRENT_TIMESTAMP} from "../utils/constants";
+import { CURRENT_TIMESTAMP } from '../utils/constants';
 import { Product } from 'src/products/product.entity';
-import { Review } from "../reviews/review.entity";
-import { UserType } from "../utils/enums";
+import { Review } from '../reviews/review.entity';
+import { UserType } from '../utils/enums';
 import { Exclude } from 'class-transformer';
 
-
-
-
-@Entity( {name: "users"} )
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: "varchar" , length: 150 , nullable:true , unique: true})
+  @Column({ type: 'varchar', length: 150, nullable: true, unique: true })
   username: string;
 
-  @Column({type: "varchar" , length: 250 , unique: true})
+  @Column({ type: 'varchar', length: 250, unique: true })
   email: string;
 
   @Column()
   @Exclude()
   password: string;
 
-
-  @Column({type: "enum" , enum:UserType , default:UserType.NORMAL_USER})
+  @Column({ type: 'enum', enum: UserType, default: UserType.NORMAL_USER })
   userType: UserType;
 
-  @Column({default: false})
+  @Column({ default: false })
   isAccountVerified: boolean;
 
   @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
@@ -47,11 +43,9 @@ export class User {
   })
   updated_at: Date;
 
-
   @OneToMany(() => Product, (product) => product.user)
-  products: Product[] 
-  
+  products: Product[];
 
-  @OneToMany(() => Review , (review) => review.user)
-  reviews: Review[]
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 }
