@@ -6,11 +6,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {CURRENT_TIMESTAMP} from "../utils/constants";
-import {Product} from "../products/product.entity";
-import { User } from "../users/user.entity";
+import { CURRENT_TIMESTAMP } from '../utils/constants';
+import { Product } from '../products/product.entity';
+import { User } from '../users/user.entity';
 
-@Entity( {name: "reviews"} )
+@Entity({ name: 'reviews' })
 export class Review {
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,9 +31,9 @@ export class Review {
   })
   updated_at: Date;
 
-  @ManyToOne( () => Product , (product) => product.reviews )
+  @ManyToOne(() => Product, (product) => product.reviews)
   product: Product;
 
-  @ManyToOne(() => User , (user) => user.reviews)
+  @ManyToOne(() => User, (user) => user.reviews)
   user: User;
 }
