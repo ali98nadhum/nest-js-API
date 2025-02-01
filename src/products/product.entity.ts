@@ -7,13 +7,11 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import {CURRENT_TIMESTAMP} from "../utils/constants"
-import {Review} from "../reviews/review.entity"
-import { User } from "../users/user.entity"
+import { CURRENT_TIMESTAMP } from '../utils/constants';
+import { Review } from '../reviews/review.entity';
+import { User } from '../users/user.entity';
 
-
-
-@Entity( {name: "Products"} )
+@Entity({ name: 'Products' })
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,14 +31,13 @@ export class Product {
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => CURRENT_TIMESTAMP,
-    onUpdate:  CURRENT_TIMESTAMP,
+    onUpdate: CURRENT_TIMESTAMP,
   })
   updated_at: Date;
 
-  @OneToMany(() => Review , (review) => review.product , {eager :true})
+  @OneToMany(() => Review, (review) => review.product, { eager: true })
   reviews: Review[];
 
-
-  @ManyToOne(() => User , (user) => user.products , {eager :true})
+  @ManyToOne(() => User, (user) => user.products, { eager: true })
   user: User;
 }
