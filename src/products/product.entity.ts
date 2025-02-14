@@ -34,6 +34,7 @@ export class Product {
     onUpdate: CURRENT_TIMESTAMP,
   })
   updated_at: Date;
+  
 
   @OneToMany(() => Review, (review) => review.product, { eager: true })
   reviews: Review[];
