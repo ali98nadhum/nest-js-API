@@ -40,6 +40,7 @@ export class UsersController{
     public login(@Body() body:LoginDto){
         return this.userService.login(body);
     }
+    
 
     @Get("current-user")
     @UseGuards(AuthGuard)
