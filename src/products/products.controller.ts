@@ -42,6 +42,7 @@ export class ProductsController {
   }
 
 
+  
   @Get(":id")
     public getSingleProducts(@Param("id" , ParseIntPipe) id:number) {
       return this.productService.getOneBy(id)
