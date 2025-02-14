@@ -26,6 +26,7 @@ export class User {
   @Column()
   @Exclude()
   password: string;
+  
 
   @Column({ type: 'enum', enum: UserType, default: UserType.NORMAL_USER })
   userType: UserType;
