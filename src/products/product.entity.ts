@@ -22,6 +22,7 @@ export class Product {
   @Column()
   description: string;
 
+  
   @Column()
   price: number;
 
