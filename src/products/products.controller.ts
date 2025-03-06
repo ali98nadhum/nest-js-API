@@ -7,7 +7,8 @@ import {
    Delete,
    ParseIntPipe,
    ValidationPipe,
-   UseGuards
+   UseGuards,
+   Query
   } from '@nestjs/common';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
@@ -37,8 +38,12 @@ export class ProductsController {
   }
   // Get all products
   @Get()
-    public getAllProducts() {
-     return this.productService.getAll()
+    public getAllProducts(
+      @Query("title") title:string,
+      @Query("minPrice") minPrice:string, 
+      @Query("maxPrice") maxPrice:string ,
+    ) {  
+     return this.productService.getAll(title, minPrice , maxPrice)
   }
 
 
