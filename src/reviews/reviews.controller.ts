@@ -8,21 +8,18 @@ import { Roles } from "src/users/decorators/user.role.decorator";
 import { UserType } from "src/utils/enums";
 
 
-@Controller("api/reviews")
-export class ReviewsController{
+@Controller('api/reviews')
+export class ReviewsController {
+  constructor(private readonly reviewService: ReviewsService) {}
 
-
-    constructor(private readonly reviewService: ReviewsService){}
-    
-
-
-    @Post(':productId')
-    @UseGuards(AuthRolesGuard)
-    @Roles(UserType.ADMIN , UserType.NORMAL_USER)
-    public createNewReview(@Param('productId' , ParseIntPipe) productId:number,@Body() body: CreateReviewDto,@CurrentUser() payload: JwtPayloadType){
-
-        return this.reviewService.createReview(productId , payload.id , body)
-    }
-
-
-    }
+  @Post(':productId')
+  @UseGuards(AuthRolesGuard)
+  @Roles(UserType.ADMIN, UserType.NORMAL_USER)
+  public createNewReview(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body() body: CreateReviewDto,
+    @CurrentUser() payload: JwtPayloadType,
+  ) {
+    return this.reviewService.createReview(productId, payload.id, body);
+  }
+}
