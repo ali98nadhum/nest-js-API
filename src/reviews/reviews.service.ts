@@ -1,4 +1,10 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Review } from "./review.entity";
+import { Repository } from "typeorm";
+import { ProductsService } from "src/products/products.service";
+import { UserService } from "src/users/users.service";
+import { CreateReviewDto } from "./dtos/create-review.dto";
 
 
 
@@ -6,13 +12,21 @@ import { Injectable } from "@nestjs/common";
 export class ReviewsService {
 
 
+    // Constructor
+    constructor(
+        @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
+        private readonly productService: ProductsService,
+        private readonly usersService: UserService
+    ){}
 
-        public getAll(){
-            return [
-                {id: 1, productId: 1, userId: 1, content: "Great product!", rating: 5},
-                {id: 2, productId: 2, userId: 2, content: "Disappointing!", rating: 2},
-                {id: 3, productId: 3, userId: 3, content: "Fantastic!", rating: 5},
-            ]
-        }
+       
+    // Create new review
+    public async createReview(productId:number , userId: number , dto:CreateReviewDto){
+        const product = await this.productService.getOneBy(productId);
+        const user = await this.usersService.getCurrentUser(userId);
+
+        const review = this.reviewRepository.create({...dto , user , product})
+        return this.reviewRepository.save(review);
+    }
 }
 
