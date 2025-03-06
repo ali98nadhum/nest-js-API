@@ -26,7 +26,16 @@ export class ReviewsService {
         const user = await this.usersService.getCurrentUser(userId);
 
         const review = this.reviewRepository.create({...dto , user , product})
-        return this.reviewRepository.save(review);
+        const result = await this.reviewRepository.save(review);
+
+        return {
+            id: result.id,
+            comment: result.comment, 
+            rating: result.rating,
+            createdAt: result.created_at,
+            userId: user.id,
+            productId: product.id
+        }
     }
 }
 
