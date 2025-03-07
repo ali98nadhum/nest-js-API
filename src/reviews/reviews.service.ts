@@ -6,6 +6,8 @@ import { ProductsService } from "src/products/products.service";
 import { UserService } from "src/users/users.service";
 import { CreateReviewDto } from "./dtos/create-review.dto";
 import { UodateReviewDto } from "./dtos/update-review.dto";
+import { JwtPayloadType } from "src/utils/types";
+import { UserType } from "src/utils/enums";
 
 
 
@@ -58,6 +60,22 @@ export class ReviewsService {
         review.rating = dto.rating ?? review.rating;
 
         return this.reviewRepository.save(review)
+    }
+
+
+    // Delete review
+    public async delete(reviewId: number , payload: JwtPayloadType){
+        // get review from database
+        const review = await this.getReviewById(reviewId)
+        // check if the user is the owner of the review
+        if(review.user.id === payload.id || payload.userType === UserType.ADMIN){
+            await this.reviewRepository.remove(review)
+            return {message: "Review has been deleted"}
+        }
+
+        throw new ForbiddenException("You are not allowed to delete this review");
+        
+
     }
 
 
