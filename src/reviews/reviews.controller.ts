@@ -22,4 +22,13 @@ export class ReviewsController {
   ) {
     return this.reviewService.createReview(productId, payload.id, body);
   }
+
+
+  // Get all reviews for a product
+  @Get()
+  @UseGuards(AuthRolesGuard)
+  @Roles(UserType.ADMIN)
+  public getAllReviews(){
+    return this.reviewService.getAll();
+  }
 }
