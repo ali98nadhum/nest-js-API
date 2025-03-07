@@ -1,7 +1,7 @@
 import { IsNumber, IsOptional, IsString, Max, Min, MinLength } from "class-validator";
 
 
-export class CreateReviewDto {
+export class UodateReviewDto {
 
     @IsNumber()
     @Min(1)

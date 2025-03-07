@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Review } from "./review.entity";
 import { Repository } from "typeorm";
 import { ProductsService } from "src/products/products.service";
 import { UserService } from "src/users/users.service";
 import { CreateReviewDto } from "./dtos/create-review.dto";
+import { UodateReviewDto } from "./dtos/update-review.dto";
 
 
 
@@ -42,6 +43,28 @@ export class ReviewsService {
     // Get all review
     public async getAll(){
         return this.reviewRepository.find({order: {created_at: "DESC"}})
+    }
+
+
+    // Update review
+    public async update(reviewId: number , userId: number , dto: UodateReviewDto){
+        // get review from database
+        const review = await this.getReviewById(reviewId)
+        // check if the user is the owner of the review
+        if(review.user.id !== userId) throw new ForbiddenException("access denied you are not allowed")
+
+        // update review
+        review.comment = dto.comment ?? review.comment;
+        review.rating = dto.rating ?? review.rating;
+
+        return this.reviewRepository.save(review)
+    }
+
+
+    private async getReviewById(id: number){
+        const review = await this.reviewRepository.findOne({where: {id}})
+        if(!review) throw new NotFoundException("Review not found")
+        return review;
     }
 }
 
