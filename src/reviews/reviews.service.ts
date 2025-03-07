@@ -43,8 +43,11 @@ export class ReviewsService {
 
 
     // Get all review
-    public async getAll(){
-        return this.reviewRepository.find({order: {created_at: "DESC"}})
+    public async getAll(pageNumber: number , reviewPerPage: number){
+        return this.reviewRepository.find({
+            skip: reviewPerPage * (pageNumber - 1),
+            take: reviewPerPage,
+            order: {created_at: "DESC"}})
     }
 
 
