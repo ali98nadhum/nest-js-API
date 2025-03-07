@@ -37,5 +37,11 @@ export class ReviewsService {
             productId: product.id
         }
     }
+
+
+    // Get all review
+    public async getAll(){
+        return this.reviewRepository.find({order: {created_at: "DESC"}})
+    }
 }
 
