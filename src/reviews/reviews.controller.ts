@@ -29,7 +29,9 @@ export class ReviewsController {
   @Get()
   @UseGuards(AuthRolesGuard)
   @Roles(UserType.ADMIN)
-  public getAllReviews(@Query('pageNumber', ParseIntPipe) pageNumber: number , @Query('reviewPerPage' , ParseIntPipe) reviewPerPage:number){
+  public getAllReviews(
+    @Query('pageNumber', ParseIntPipe) pageNumber: number , 
+    @Query('reviewPerPage' , ParseIntPipe) reviewPerPage:number){
     return this.reviewService.getAll(pageNumber , reviewPerPage);
   }
 

@@ -31,9 +31,9 @@ export class Review {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Product, (product) => product.reviews)
+  @ManyToOne(() => Product, (product) => product.reviews , {onDelete: "CASCADE"})
   product: Product;
 
-  @ManyToOne(() => User, (user) => user.reviews , {eager: true})
+  @ManyToOne(() => User, (user) => user.reviews , {eager: true , onDelete: "CASCADE"})
   user: User;
 }
