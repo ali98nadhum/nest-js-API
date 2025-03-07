@@ -49,6 +49,6 @@ export class ReviewsController {
   @UseGuards(AuthRolesGuard)
   @Roles(UserType.ADMIN, UserType.NORMAL_USER)
   public DeleteReview(@Param('id', ParseIntPipe) id: number,@CurrentUser() payload: JwtPayloadType) {
-    return this.DeleteReview(id , payload);
+    return this.reviewService.delete(id, payload);
   }
 }
