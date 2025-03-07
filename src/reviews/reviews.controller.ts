@@ -1,6 +1,7 @@
-import { Body, Controller , Get, Param, ParseIntPipe, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller , Get, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
 import { ReviewsService } from "./reviews.service";
 import { CreateReviewDto } from "./dtos/create-review.dto";
+import { UodateReviewDto } from "./dtos/update-review.dto";
 import { CurrentUser } from "src/users/decorators/current-user.decorator";
 import { JwtPayloadType } from "src/utils/types";
 import { AuthRolesGuard } from "src/users/guards/auth.roles.guard";
@@ -30,5 +31,17 @@ export class ReviewsController {
   @Roles(UserType.ADMIN)
   public getAllReviews(){
     return this.reviewService.getAll();
+  }
+
+
+  @Put(':id')
+  @UseGuards(AuthRolesGuard)
+  @Roles(UserType.ADMIN, UserType.NORMAL_USER)
+  public updateReview(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UodateReviewDto,
+    @CurrentUser() payload: JwtPayloadType,
+  ) {
+    return this.reviewService.update(id, payload.id , body);
   }
 }
