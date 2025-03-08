@@ -88,17 +88,16 @@ export class UserService {
     if(user.profileImage === null){
       user.profileImage = newProfileImage;
     } else {
-      await this.deleteProfileImage(userId)
+      await this.deleteImage(userId)
       user.profileImage = newProfileImage;
     }
-
-   
-
+    
     return this.userRepository.save(user);
   }
 
 
-  public async deleteProfileImage(userId:number){
+  public async deleteImage(userId:number){
+    console.log("User ID:", typeof userId, userId);
     const user = await this.getCurrentUser(userId);
     if(user.profileImage === null){
       throw new ForbiddenException("You cannot delete your profile image");

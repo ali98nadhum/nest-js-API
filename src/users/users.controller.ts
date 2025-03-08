@@ -101,5 +101,13 @@ export class UsersController{
             
          return this.userService.setProfileImage(payload.id , file.filename)
     }
+
+
+    @Delete("images/remove-profile-image")
+    @UseGuards(AuthGuard)
+    public deleteProfileImage(@CurrentUser() payload: JwtPayloadType){
+        return this.userService.deleteImage(payload.id);
+    }
+   
     
 }
