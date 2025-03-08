@@ -103,6 +103,8 @@ export class UserService {
       throw new ForbiddenException("You cannot delete your profile image");
     }
 
+
+    
     const imagePath = join(process.cwd() , `./images/users/${user.profileImage}`);
     unlinkSync(imagePath);
     user.profileImage = null;
