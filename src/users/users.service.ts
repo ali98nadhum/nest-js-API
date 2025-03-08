@@ -85,7 +85,14 @@ export class UserService {
   public async setProfileImage(userId:number , newProfileImage: string){
     const user = await this.getCurrentUser(userId);
 
-    user.profileImage = newProfileImage;
+    if(user.profileImage === null){
+      user.profileImage = newProfileImage;
+    } else {
+      await this.deleteProfileImage(userId)
+      user.profileImage = newProfileImage;
+    }
+
+   
 
     return this.userRepository.save(user);
   }
