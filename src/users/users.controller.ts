@@ -99,7 +99,7 @@ export class UsersController{
 
         if(!file) throw new BadRequestException("no image to upload")
             
-         return {message: "successfully uploaded image"}
+         return this.userService.setProfileImage(payload.id , file.filename)
     }
     
 }
