@@ -47,6 +47,9 @@ export class UsersController{
     }
     
 
+
+    
+
     @Get("current-user")
     @UseGuards(AuthGuard)
     public getCurrentUser(@CurrentUser() payload:JwtPayloadType){
@@ -59,6 +62,9 @@ export class UsersController{
     public getAllUsers(){
         return this.userService.getAll();
     }
+
+
+
 
     @Put()
     @Roles(UserType.ADMIN , UserType.NORMAL_USER)
@@ -73,6 +79,9 @@ export class UsersController{
     public deleteUser(@Param("id" , ParseIntPipe) id: number , @CurrentUser() payload: JwtPayloadType){
         return this.userService.delete(id , payload);
     }
+
+
+
 
 
     @Post("upload-image")
@@ -101,6 +110,8 @@ export class UsersController{
             
          return this.userService.setProfileImage(payload.id , file.filename)
     }
+
+
 
 
     @Delete("images/remove-profile-image")
