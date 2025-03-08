@@ -80,6 +80,13 @@ export class UserService {
 
 
 
+  public async setProfileImage(userId:number , newProfileImage: string){
+    const user = await this.getCurrentUser(userId);
+
+    user.profileImage = newProfileImage;
+
+    return this.userRepository.save(user);
+  }
  
 
 }
