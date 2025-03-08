@@ -9,6 +9,8 @@ import {JwtPayloadType} from "../utils/types";
 import { UpdateUserDto } from './dtos/update.user.dto';
 import { UserType } from 'src/utils/enums';
 import { AuthProvider } from './auth.provider';
+import {join} from "node:path";
+import {unlinkSync} from "node:fs";
 
 
 @Injectable()
@@ -85,6 +87,19 @@ export class UserService {
 
     user.profileImage = newProfileImage;
 
+    return this.userRepository.save(user);
+  }
+
+
+  public async deleteProfileImage(userId:number){
+    const user = await this.getCurrentUser(userId);
+    if(user.profileImage === null){
+      throw new ForbiddenException("You cannot delete your profile image");
+    }
+
+    const imagePath = join(process.cwd() , `./images/users/${user.profileImage}`);
+    unlinkSync(imagePath);
+    user.profileImage = null;
     return this.userRepository.save(user);
   }
  
