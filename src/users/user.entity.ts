@@ -44,6 +44,7 @@ export class User {
   })
   updated_at: Date;
 
+  
   @Column({nullable: true , default: null})
   profileImage: string
 
