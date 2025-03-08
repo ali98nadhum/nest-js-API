@@ -1,4 +1,5 @@
 import { 
+    BadRequestException,
     Body, 
     Controller ,
     Delete, 
@@ -9,7 +10,9 @@ import {
     ParseIntPipe, 
     Post ,
     Put , 
-    UseGuards , 
+    UploadedFile, 
+    UseGuards, 
+    UseInterceptors, 
 } from "@nestjs/common";
 import { UserService } from "./users.service";
 import { RegisterDto } from "./dtos/register.dto";
@@ -21,6 +24,8 @@ import { Roles } from "./decorators/user.role.decorator";
 import { UserType } from "../utils/enums";
 import { AuthRolesGuard } from "./guards/auth.roles.guard";
 import { UpdateUserDto } from "./dtos/update.user.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
 
 
 
@@ -68,4 +73,33 @@ export class UsersController{
     public deleteUser(@Param("id" , ParseIntPipe) id: number , @CurrentUser() payload: JwtPayloadType){
         return this.userService.delete(id , payload);
     }
+
+
+    @Post("upload-image")
+    @UseGuards(AuthGuard)
+    @UseInterceptors(FileInterceptor("user-image" , {
+        storage: diskStorage({
+            destination: './images/users',
+            filename: (req , file , cb) => {
+                const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`;
+                const fileName = `${prefix}-${file.originalname}`;
+                cb(null , fileName);
+            }
+        }),
+                fileFilter: (req , file , cb) => {
+                    if(file.mimetype.startsWith("image")){
+                        cb(null , true);
+                    } else{
+                        cb(new BadRequestException("this is not image") , false)
+                    }
+                },
+                limits: {fileSize: 1024 * 1024 * 2}
+    }))
+    public uploadProfileImage(@UploadedFile() file: Express.Multer.File , @CurrentUser() payload: JwtPayloadType){
+
+        if(!file) throw new BadRequestException("no image to upload")
+            
+         return {message: "successfully uploaded image"}
+    }
+    
 }

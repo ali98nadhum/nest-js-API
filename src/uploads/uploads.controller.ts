@@ -30,7 +30,6 @@ export class UploadsController{
     public uploadFile(@UploadedFile() file: Express.Multer.File){
 
         if(!file) throw new BadRequestException("no file to upload")
-        console.log(file);
         return {message: "Uploading file"}
 
     }
