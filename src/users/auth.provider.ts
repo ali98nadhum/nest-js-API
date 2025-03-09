@@ -7,7 +7,7 @@ import { RegisterDto } from "./dtos/register.dto";
 import * as bcrypt from "bcryptjs";
 import { LoginDto } from "./dtos/login.dto";
 import { JwtPayloadType } from "src/utils/types";
-import { MailerService } from "@nestjs-modules/mailer";
+import { MailService } from "src/mail/mail.service";
 
 @Injectable()
 export class AuthProvider {
@@ -15,7 +15,7 @@ export class AuthProvider {
     constructor(
             @InjectRepository(User) private readonly userRepository: Repository<User>,
             private readonly jwtService: JwtService,
-            private readonly mailerService:MailerService
+            private readonly mailService: MailService
         ){}
 
      public async register(registerDto: RegisterDto) {
@@ -63,28 +63,9 @@ export class AuthProvider {
         const payload: JwtPayloadType = {id: user.id , userType: user.userType};
         const token = await this.generateJWT(payload);
 
+        // send email to user before send token
+        await this.mailService.sendLoginEmail(user.email);
 
-        // Send email to user
-        try {
-
-          const today = new Date();
-          await this.mailerService.sendMail({
-            to: user.email,
-            from : `<no-rerplay@my-nest-app.com>`,
-            subject: "Login",
-            html: `
-            <div>
-            <h2>Hi ${user.email}</h2>
-            <p>you logged in your account in ${today.toDateString()} at ${today.toLocaleDateString()}</p>
-            </div>
-            `
-          })
-          
-        } catch (error) {
-          console.log(error);
-          throw new RequestTimeoutException()
-          
-        }
     
         return {message: "Logged in successfully", token}
         
