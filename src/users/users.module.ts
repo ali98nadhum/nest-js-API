@@ -8,6 +8,7 @@ import { ConfigService } from "@nestjs/config";
 import { AuthProvider } from "./auth.provider";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
+import { MailModule } from "src/mail/mail.module";
 
 
 @Module({
@@ -15,6 +16,7 @@ import { diskStorage } from "multer";
     providers: [UserService , AuthProvider],
     exports: [UserService],
     imports: [
+        MailModule,
         TypeOrmModule.forFeature([User]),
         JwtModule.registerAsync({
             inject: [ConfigService],
