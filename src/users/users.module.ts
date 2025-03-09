@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { BadRequestException, Module } from "@nestjs/common";
 import { UsersController } from "./users.controller";
 import { UserService } from "./users.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -6,6 +6,8 @@ import { User } from "./user.entity";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { AuthProvider } from "./auth.provider";
+import { MulterModule } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
 
 
 @Module({
@@ -23,7 +25,25 @@ import { AuthProvider } from "./auth.provider";
                     signOptions: {expiresIn: config.get<string>("JWT_EXPIRES_IN")}
                 }
             }
-        })
+        }),
+        MulterModule.register({
+                storage: diskStorage({
+                    destination: './images/users',
+                    filename: (req , file , cb) => {
+                        const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`;
+                        const fileName = `${prefix}-${file.originalname}`;
+                        cb(null , fileName);
+                    }
+                }),
+                        fileFilter: (req , file , cb) => {
+                            if(file.mimetype.startsWith("image")){
+                                cb(null , true);
+                            } else{
+                                cb(new BadRequestException("this is not image") , false)
+                            }
+                        },
+                        limits: {fileSize: 1024 * 1024 * 2}
+            })
 ]
 })
 export class UsersModule{}
