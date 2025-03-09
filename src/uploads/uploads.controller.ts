@@ -1,5 +1,5 @@
-import { BadRequestException, Controller, Get, Param, Post , Res, UploadedFile , UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { BadRequestException, Controller, Get, Param, Post , Res, UploadedFile , UseInterceptors , UploadedFiles } from "@nestjs/common";
+import { FileInterceptor , FilesInterceptor } from "@nestjs/platform-express";
 import { Express , Response } from "express";
 
 
@@ -13,6 +13,16 @@ export class UploadsController{
 
         if(!file) throw new BadRequestException("no file to upload")
         return {message: "Uploading file"}
+
+    }
+
+
+    @Post('multiple-fils')
+    @UseInterceptors(FilesInterceptor("files"))
+    public UploadMultipleFils(@UploadedFiles() files: Array <Express.Multer.File>){
+
+        if(!files || files.length === 0) throw new BadRequestException("no file to upload")
+        return {message: "Uploading files successfully"}
 
     }
 
