@@ -30,4 +30,25 @@ export class MailService {
           }
     }
 
+
+
+    public async sendVerifyEmail(email: string , link:string){
+
+      // Send email to user
+      try {
+          await this.mailerService.sendMail({
+            to: email,
+            from : `<no-rerplay@my-nest-app.com>`,
+            subject: "Verify your account",
+            template: 'verify-email',
+            context: {link}
+          })
+          
+        } catch (error) {
+          console.log(error);
+          throw new RequestTimeoutException()
+          
+        }
+  }
+
 }
