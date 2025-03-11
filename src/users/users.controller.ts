@@ -101,6 +101,16 @@ export class UsersController{
     public deleteProfileImage(@CurrentUser() payload: JwtPayloadType){
         return this.userService.deleteImage(payload.id);
     }
+
+
+    @Get('verify-email/:id/:verificationToken')
+    public verifyEmail(
+        @Param('id' , ParseIntPipe) id:number,
+        @Param('verificationToken') verificationToken: string
+    ){
+
+        return this.userService.verifyEmail(id , verificationToken)
+    }
    
     
 }
