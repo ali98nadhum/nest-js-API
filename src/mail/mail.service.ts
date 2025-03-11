@@ -20,12 +20,7 @@ export class MailService {
               to: email,
               from : `<no-rerplay@my-nest-app.com>`,
               subject: "Login",
-              html: `
-              <div>
-              <h2>Hi ${email}</h2>
-              <p>you logged in your account in ${today.toDateString()} at ${today.toLocaleDateString()}</p>
-              </div>
-              `
+              template: 'login'
             })
             
           } catch (error) {
