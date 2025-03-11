@@ -14,13 +14,13 @@ export class MailService {
 
         // Send email to user
         try {
-
             const today = new Date();
             await this.mailerService.sendMail({
               to: email,
               from : `<no-rerplay@my-nest-app.com>`,
               subject: "Login",
-              template: 'login'
+              template: 'login',
+              context: {email , today}
             })
             
           } catch (error) {

@@ -1,8 +1,9 @@
 <div style="font-family: sans-serif;">
-    <h2 style="color: blue;">Hello <span style="color: black;"></span> </h2>
-
-
-    <p style="color: gray;"></p>
-
+    <h2 style="color: blue;">
+        Hello <span style="color: black;"> <%= email %> </span>
+    </h2>
+    <p style="color: gray;">
+        You logged in to your account on <%= today.toDateString() %> at <%= today.toLocaleTimeString() %>
+    </p>
     Thanks
 </div>
