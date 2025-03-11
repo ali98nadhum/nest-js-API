@@ -8,6 +8,8 @@ import * as bcrypt from "bcryptjs";
 import { LoginDto } from "./dtos/login.dto";
 import { JwtPayloadType } from "src/utils/types";
 import { MailService } from "src/mail/mail.service";
+import {randomBytes} from "node:crypto";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthProvider {
@@ -15,7 +17,8 @@ export class AuthProvider {
     constructor(
             @InjectRepository(User) private readonly userRepository: Repository<User>,
             private readonly jwtService: JwtService,
-            private readonly mailService: MailService
+            private readonly mailService: MailService,
+            private readonly config:ConfigService
         ){}
 
      public async register(registerDto: RegisterDto) {
@@ -33,16 +36,17 @@ export class AuthProvider {
         let newUser = this.userRepository.create({
             email,
             username,
-            password: hashPassword
+            password: hashPassword,
+            verificationToken: randomBytes(32).toString('hex')
         });
     
         newUser = await this.userRepository.save(newUser);
+        const link = `${this.config.get<string>('DOMAIN')}/api/users/verify-email/${newUser.id}/${newUser.verificationToken}`
+
+        await this.mailService.sendVerifyEmail(email , link)
     
-        // Genrated token
-        const payload: JwtPayloadType = {id: newUser.id , userType: newUser.userType};
-        const token = await this.generateJWT(payload);
-    
-        return {token}
+       
+        return {message: "Verification token has been sent to your email"}
     
       }
     
