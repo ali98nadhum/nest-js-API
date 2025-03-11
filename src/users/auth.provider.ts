@@ -41,7 +41,7 @@ export class AuthProvider {
         });
     
         newUser = await this.userRepository.save(newUser);
-        const link = `${this.config.get<string>('DOMAIN')}/api/users/verify-email/${newUser.id}/${newUser.verificationToken}`
+        const link = this.generateLink(newUser.id , newUser.verificationToken)
 
         await this.mailService.sendVerifyEmail(email , link)
     
@@ -63,12 +63,24 @@ export class AuthProvider {
         // Check if password is valid
         const passwordIsValid = await bcrypt.compare(password , user.password);
         if(!passwordIsValid) throw new BadRequestException("Invalid email or password");
+
+        // Check verificationToken
+        if(!user.isAccountVerified){
+          let verificationToken = user.verificationToken;
+          if(!verificationToken){
+            user.verificationToken = randomBytes(32).toString('hex');
+            const result = await this.userRepository.save(user);
+            verificationToken = result.verificationToken;
+          }
+
+          const link = this.generateLink(user.id , verificationToken);
+          await this.mailService.sendVerifyEmail(user.email , link);
+
+          return {message: "Verification token has been sent to your email"}
+        }
     
         const payload: JwtPayloadType = {id: user.id , userType: user.userType};
         const token = await this.generateJWT(payload);
-
-        // send email to user before send token
-        await this.mailService.sendLoginEmail(user.email);
 
     
         return {message: "Logged in successfully", token}
@@ -79,5 +91,9 @@ export class AuthProvider {
         // generate jsonweb token
       private generateJWT(payload: JwtPayloadType): Promise<string> {
         return this.jwtService.signAsync(payload);
+      }
+
+      private generateLink(userId: number , verificationToken:string){
+        return `${this.config.get<string>('DOMAIN')}/api/users/verify-email/${userId}/${verificationToken}`
       }
 }
