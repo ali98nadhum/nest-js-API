@@ -86,6 +86,7 @@ export class AuthProvider {
         return {message: "Logged in successfully", token}
         
       }
+      
 
 
         // generate jsonweb token
