@@ -1,4 +1,4 @@
-import {ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -109,6 +109,25 @@ export class UserService {
     unlinkSync(imagePath);
     user.profileImage = null;
     return this.userRepository.save(user);
+  }
+
+
+  public async verifyEmail(userId: number , verificationToken: string){
+    const user = await this.getCurrentUser(userId);
+
+    if(user.verificationToken === null){
+      throw new NotFoundException("You cannot verify your")
+    }
+
+    if(user.verificationToken !== verificationToken){
+      throw new BadRequestException("Invalid verification link")
+    }
+
+    user.isAccountVerified = true;
+    user.verificationToken = null;
+    await this.userRepository.save(user);
+
+    return {message: "Email has been verified , please login to your account"}
   }
  
 
