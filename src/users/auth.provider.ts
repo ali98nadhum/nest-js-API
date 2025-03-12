@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, RequestTimeoutException } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
 import { Repository } from "typeorm";
@@ -95,7 +95,7 @@ export class AuthProvider {
       }
 
 
-      
+
       private generateLink(userId: number , verificationToken:string){
         return `${this.config.get<string>('DOMAIN')}/api/users/verify-email/${userId}/${verificationToken}`
       }
