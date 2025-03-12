@@ -94,6 +94,8 @@ export class AuthProvider {
         return this.jwtService.signAsync(payload);
       }
 
+
+      
       private generateLink(userId: number , verificationToken:string){
         return `${this.config.get<string>('DOMAIN')}/api/users/verify-email/${userId}/${verificationToken}`
       }
