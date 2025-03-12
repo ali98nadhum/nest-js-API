@@ -103,6 +103,8 @@ export class UsersController{
     }
 
 
+    
+
     @Get('verify-email/:id/:verificationToken')
     public verifyEmail(
         @Param('id' , ParseIntPipe) id:number,
