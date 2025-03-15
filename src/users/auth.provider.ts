@@ -86,8 +86,9 @@ export class AuthProvider {
         return {message: "Logged in successfully", token}
         
       }
-      
 
+
+    
 
         // generate jsonweb token
       private generateJWT(payload: JwtPayloadType): Promise<string> {
