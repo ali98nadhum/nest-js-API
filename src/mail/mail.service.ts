@@ -61,8 +61,8 @@ export class MailService {
         await this.mailerService.sendMail({
           to: email,
           from : `<no-rerplay@my-nest-app.com>`,
-          subject: "ResetPassword(",
-          template: 'reset-password(',
+          subject: "Reset-Password",
+          template: 'reset-password',
           context: {resetPasswordLink}
         })
         
