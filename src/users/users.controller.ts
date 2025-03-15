@@ -27,7 +27,6 @@ import { UpdateUserDto } from "./dtos/update.user.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 
-
 @Controller("api/users")
 export class UsersController{
 
