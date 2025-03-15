@@ -54,23 +54,6 @@ export class MailService {
   }
 
 
-  public async resetPasswordTemplate(email: string , resetPasswordLink:string){
-
-    // Send email to user
-    try {
-        await this.mailerService.sendMail({
-          to: email,
-          from : `<no-rerplay@my-nest-app.com>`,
-          subject: "Reset-Password",
-          template: 'reset-password',
-          context: {resetPasswordLink}
-        })
-        
-      } catch (error) {
-        console.log(error);
-        throw new RequestTimeoutException()
-        
-      }
-}
+  
 
 }
