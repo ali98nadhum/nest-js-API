@@ -20,6 +20,8 @@ export class UserService {
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly authProvider: AuthProvider
     ){}
+
+    
    
 //   Register new user
   public async register(registerDto: RegisterDto) {
